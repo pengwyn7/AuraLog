@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AuraLog - Mood Tracker</title>
+    <style>
+        body { font-family: Arial; margin: 40px; background: #f5f5f5; }
+        .container { max-width: 700px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px #ccc; }
+        input, textarea, select { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #ccc; }
+        button { padding: 10px 15px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        h1 { text-align: center; color: #333; }
+        .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
+        .day { background: #e0f7fa; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌿 AuraLog</h1>
+        <h3>Average Mood Score: {{ avg_mood|floatformat:1 }}</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <label>Mood Score (1–5)</label>
+            <select name="mood_score" required>
+                <option value="">Select</option>
+                {% for i in "12345" %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+            <label>Notes</label>
+            <textarea name="notes" placeholder="How are you feeling today?"></textarea>
+            <button type="submit">Save Mood</button>
+        </form>
+
+        <h2>📅 Mood Calendar</h2>
+        <div class="calendar">
+            {% for entry in entries %}
+            <div class="day">
+                <strong>{{ entry.date }}</strong><br>
+                Mood: {{ entry.mood_score }}<br>
+                {{ entry.notes }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
